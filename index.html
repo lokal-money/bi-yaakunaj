@@ -13,6 +13,79 @@
   --blue:#3b82f6; --violet:#a78bfa; --text:#e8edf5; --muted:#7a8ba8;
   --border:rgba(255,255,255,0.07); --card-r:14px;
 }
+
+/* ── LIGHT MODE ───────────────────────────────────────────── */
+body.light {
+  --navy:#f0f4f8; --navy2:#e2e8f0; --panel:#ffffff; --panel2:#f7fafc;
+  --teal:#00957e; --teal2:#007d6a; --gold:#d97706; --red:#dc2626;
+  --blue:#2563eb; --violet:#7c3aed; --text:#1a202c; --muted:#64748b;
+  --border:rgba(0,0,0,0.09); --card-r:14px;
+}
+body.light .site-header {
+  background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+body.light .kpi-strip { background: #ffffff; }
+body.light .kpi-item.accent { background: linear-gradient(135deg, #00957e, #007d6a); }
+body.light .report-footer { background: #ffffff; }
+body.light .period-badge {
+  background: rgba(0,149,126,0.1);
+  border-color: rgba(0,149,126,0.3);
+  color: var(--teal);
+}
+body.light .logo-text span { color: var(--teal); }
+body.light .logo-icon { background: linear-gradient(135deg,#00957e,#007d6a); }
+body.light table thead th { border-bottom-color: rgba(0,0,0,0.1); }
+body.light .date-filter { background: #f7fafc; border-color: rgba(0,0,0,0.1); }
+body.light .date-filter input[type=date] {
+  background: #ffffff; border-color: rgba(0,0,0,0.15); color: #1a202c;
+}
+body.light .date-filter input[type=date]:focus { border-color: var(--teal); }
+body.light input[type=date]::-webkit-calendar-picker-indicator { filter: none; }
+body.light .qbtn { border-color: rgba(0,0,0,0.15); color: #64748b; }
+body.light .qbtn:hover, body.light .qbtn.active {
+  background: rgba(0,149,126,0.1); border-color: rgba(0,149,126,0.4); color: var(--teal);
+}
+body.light .grp-btn { border-color: rgba(0,0,0,0.15); color: #64748b; }
+body.light .grp-btn:hover, body.light .grp-btn.active {
+  background: rgba(0,149,126,0.1); border-color: rgba(0,149,126,0.4); color: var(--teal);
+}
+body.light .refresh-btn { border-color: rgba(0,0,0,0.15); color: #64748b; }
+body.light .refresh-btn:hover { border-color: rgba(0,149,126,0.4); color: var(--teal); }
+body.light .bar-fill { background: linear-gradient(90deg,#00957e,#007d6a); }
+body.light .mov-item.best { border-color: rgba(0,149,126,0.3); }
+body.light .status-banner.loading { background: rgba(255,255,255,0.95); }
+body.light .no-data-card { background: #ffffff; border-color: rgba(217,119,6,0.3); }
+
+/* ── THEME TOGGLE ──────────────────────────────────────────── */
+.theme-toggle {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11.5px; font-weight: 600; color: var(--muted);
+  user-select: none;
+}
+.theme-toggle .t-label { transition: color .3s; }
+.theme-toggle .t-label.active { color: var(--text); }
+.toggle-track {
+  width: 44px; height: 24px; border-radius: 12px;
+  background: var(--panel2); border: 1px solid var(--border);
+  position: relative; cursor: pointer;
+  transition: background .3s, border-color .3s;
+  flex-shrink: 0;
+}
+body.light .toggle-track { background: #e2e8f0; border-color: rgba(0,0,0,0.15); }
+.toggle-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  position: absolute; top: 2px; left: 2px;
+  background: var(--muted);
+  transition: transform .25s cubic-bezier(.34,1.56,.64,1), background .3s;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+}
+body.light .toggle-thumb {
+  transform: translateX(20px);
+  background: var(--teal);
+}
+
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Barlow',sans-serif;background:var(--navy);color:var(--text);font-size:13.5px;line-height:1.5;}
 
@@ -198,6 +271,25 @@ tr:hover td{background:rgba(255,255,255,0.025);}
 }
 .overlay-text { font-size: 14px; color: var(--muted); }
 
+/* NO DATA MESSAGE */
+.no-data-msg {
+  display: none;
+  position: fixed; inset: 0;
+  align-items: center; justify-content: center;
+  z-index: 200; pointer-events: none;
+}
+.no-data-msg.show { display: flex; }
+.no-data-card {
+  background: var(--panel2); border: 1px solid var(--border);
+  border-radius: 16px; padding: 32px 44px;
+  text-align: center; pointer-events: all;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  position: relative;
+}
+.no-data-icon { font-size: 36px; margin-bottom: 12px; }
+.no-data-title { font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 16px; margin-bottom: 6px; }
+.no-data-sub { color: var(--muted); font-size: 13px; }
+
 /* SPINNER */
 .updating{position:fixed;top:16px;right:16px;background:var(--teal);color:#fff;font-size:11px;font-weight:600;padding:6px 14px;border-radius:20px;z-index:999;opacity:0;transition:opacity .2s;pointer-events:none;}
 .updating.show{opacity:1;}
@@ -214,6 +306,14 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.7);cursor:po
 
 <div class="status-banner" id="statusBanner"></div>
 <div class="data-overlay" id="dataOverlay"><div class="overlay-card"><div class="spinner-ring"></div><div class="overlay-text">Conectando con Metabase…</div></div></div>
+<div class="no-data-msg" id="noDataMsg">
+  <div class="no-data-card">
+    <button onclick="closeNoData()" style="position:absolute;top:10px;right:12px;background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;line-height:1;padding:2px 6px;" title="Cerrar">✕</button>
+    <div class="no-data-icon">📭</div>
+    <div class="no-data-title">Sin datos para el período seleccionado</div>
+    <div class="no-data-sub">Intenta seleccionar otro rango de fechas</div>
+  </div>
+</div>
 
 <!-- HEADER -->
 <header class="site-header">
@@ -231,16 +331,26 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.7);cursor:po
       <input type="date" id="dateTo" value="2026-02-19"/>
       <button class="btn-apply" onclick="applyFilter()">Aplicar</button>
       <div class="quick-btns">
-        <button class="qbtn" onclick="quickSet(7)">7d</button>
-        <button class="qbtn" onclick="quickSet(14)">14d</button>
-        <button class="qbtn active" onclick="quickSet(999)">Todo</button>
+        <button class="qbtn" onclick="quickSet(0,this)">Hoy</button>
+        <button class="qbtn" onclick="quickSet(-1,this)">Ayer</button>
+        <button class="qbtn" onclick="quickSet(7,this)">7d</button>
+        <button class="qbtn" onclick="quickSet(14,this)">14d</button>
+        <button class="qbtn active" onclick="quickSet(999,this)">Todo</button>
       </div>
     </div>
   </div>
 
   <div class="header-right">
-    <div class="merchant-name">HOGAZA HOGAZA</div>
+    <div class="merchant-name">YAAKUNAJ</div>
     <div class="period-badge" id="periodLabel">20 Feb – 15 Mar 2026</div>
+  </div>
+
+  <div class="theme-toggle" onclick="toggleTheme()" style="margin-left:20px;flex-shrink:0;">
+    <span class="t-label" id="darkLabel">🌙</span>
+    <div class="toggle-track">
+      <div class="toggle-thumb" id="toggleThumb">☀️</div>
+    </div>
+    <span class="t-label" id="lightLabel">☀️</span>
   </div>
 </header>
 
@@ -316,7 +426,7 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.7);cursor:po
         </table>
       </div>
       <div class="card">
-        <div class="card-title">Distribución por red</div>
+        <div class="card-title">Distribución por marca</div>
         <div class="donut-wrap"><div class="donut-canvas"><canvas id="cardDonut"></canvas></div><div class="donut-legend" id="cardDonutLegend"></div></div>
       </div>
       <div class="card">
@@ -334,7 +444,17 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.7);cursor:po
       <div class="section-sub">Top 8 por monto transaccionado</div>
     </div>
     <div class="grid-2">
-      <div class="card"><div class="card-title">Participación por banco (MXN)</div><div id="bankBars"></div></div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <div class="card-title" style="margin-bottom:0;">Participación por banco (MXN)</div>
+          <div style="display:flex;gap:4px;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;">
+            <span style="width:40px;text-align:right;">Txns</span>
+            <span style="width:85px;text-align:right;">Monto</span>
+            <span style="width:72px;text-align:right;">Ticket</span>
+          </div>
+        </div>
+        <div id="bankBars"></div>
+      </div>
       <div class="card"><div class="card-title">Volumen por banco</div><div class="chart-wrap" style="height:210px;"><canvas id="bankChart"></canvas></div></div>
     </div>
   </section>
@@ -368,6 +488,7 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.7);cursor:po
           <th>Tipo de Tarjeta</th>
           <th class="td-right">Transacciones</th>
           <th class="td-right">Monto Bruto</th>
+          <th class="td-right">Ticket Prom.</th>
           <th class="td-right">Comisión Total</th>
           <th class="td-right">Tasa Efectiva</th>
           <th class="td-right">Monto Neto</th>
@@ -383,7 +504,7 @@ input[type=date]::-webkit-calendar-picker-indicator{filter:invert(0.7);cursor:po
 
 <footer class="report-footer">
   <div>Generado por <strong>Lokal Money BI</strong></div>
-  <div>HOGAZA HOGAZA · <span id="footerPeriod">20 Feb 2026 – 15 Mar 2026</span> · Todas las cifras en MXN</div>
+  <div>YAAKUNAJ · <span id="footerPeriod">20 Feb 2026 – 15 Mar 2026</span> · Todas las cifras en MXN</div>
 </footer>
 
 <script>
@@ -473,7 +594,32 @@ const STATUS_COLORS = {CONFIRMED:'#00c2a8',CANCELLED:'#e85d5d',REFUNDED:'#f5a623
 
 // ── CHART INSTANCES ───────────────────────────────────────────
 let charts = {};
-const PALETTE = {teal:'#00c2a8',red:'#e85d5d',gold:'#f5a623',blue:'#3b82f6',muted:'#7a8ba8',grid:'rgba(255,255,255,0.06)'};
+const PALETTE_DARK  = {teal:'#00c2a8',red:'#e85d5d',gold:'#f5a623',blue:'#3b82f6',muted:'#7a8ba8',grid:'rgba(255,255,255,0.06)'};
+const PALETTE_LIGHT = {teal:'#00957e',red:'#dc2626',gold:'#d97706',blue:'#2563eb',muted:'#64748b',grid:'rgba(0,0,0,0.07)'};
+let PALETTE = {...PALETTE_DARK};
+
+let isLight = false;
+
+function toggleTheme() {
+  isLight = !isLight;
+  document.body.classList.toggle('light', isLight);
+  PALETTE = isLight ? {...PALETTE_LIGHT} : {...PALETTE_DARK};
+  Chart.defaults.color = PALETTE.muted;
+  // Save preference
+  try { localStorage.setItem('lm-theme', isLight ? 'light' : 'dark'); } catch(e) {}
+  // Re-render all charts with new palette
+  render();
+}
+
+// Restore saved theme preference
+try {
+  if (localStorage.getItem('lm-theme') === 'light') {
+    isLight = true;
+    document.body.classList.add('light');
+    PALETTE = {...PALETTE_LIGHT};
+  }
+} catch(e) {}
+
 Chart.defaults.color = PALETTE.muted;
 Chart.defaults.font.family = "'Barlow', sans-serif";
 
@@ -483,19 +629,84 @@ function destroyChart(id) { if(charts[id]) { charts[id].destroy(); delete charts
 function getFiltered() {
   const from = document.getElementById('dateFrom').value;
   const to   = document.getElementById('dateTo').value;
-  return RAW.filter(r => r.date >= from && r.date <= to);
+  return RAW.filter(r => r.date && typeof r.date === 'string' && r.date >= from && r.date <= to);
 }
 
 // ── QUICK BUTTONS ─────────────────────────────────────────────
-function quickSet(days) {
+function todayPT() {
+  return new Date().toLocaleDateString('en-CA', {timeZone: 'America/Los_Angeles'});
+}
+
+function yesterdayPT() {
+  const y = new Date();
+  y.setDate(y.getDate() - 1);
+  return y.toLocaleDateString('en-CA', {timeZone: 'America/Los_Angeles'});
+}
+
+function quickSet(days, btn) {
   document.querySelectorAll('.qbtn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  const allDates = [...new Set(RAW.map(r=>r.date))].sort();
-  const last = allDates[allDates.length-1];
-  const first = days >= 999 ? allDates[0] : allDates[Math.max(0, allDates.length-days)];
-  document.getElementById('dateFrom').value = first;
-  document.getElementById('dateTo').value = last;
+  (btn || event.target).classList.add('active');
+  const allDates = [...new Set(RAW.map(r=>r.date).filter(d => typeof d === 'string' && d.length === 10))].sort();
+  const first = allDates[0];
+  const last  = allDates[allDates.length-1];
+  let from, to, fallbackNote = null;
+
+  if (days === 0) {          // Hoy
+    const today = todayPT();
+    if (allDates.includes(today)) {
+      from = to = today;
+    } else {
+      from = to = last;  // fallback al último día disponible
+      fallbackNote = `Sin datos para hoy — mostrando último día disponible: ${_fmtDateShort(last)}`;
+    }
+  } else if (days === -1) {  // Ayer
+    const yesterday = yesterdayPT();
+    if (allDates.includes(yesterday)) {
+      from = to = yesterday;
+    } else {
+      // fallback al penúltimo día disponible
+      from = to = allDates.length >= 2 ? allDates[allDates.length - 2] : last;
+      fallbackNote = `Sin datos para ayer — mostrando día anterior disponible: ${_fmtDateShort(from)}`;
+    }
+  } else if (days >= 999) {  // Todo
+    from = first; to = last;
+  } else {
+    from = allDates[Math.max(0, allDates.length - days)]; to = last;
+  }
+
+  document.getElementById('dateFrom').value = from;
+  document.getElementById('dateTo').value   = to;
+
+  if (fallbackNote) showFallbackNote(fallbackNote);
+  else hideFallbackNote();
+
   applyFilter();
+}
+
+function _fmtDateShort(d) {
+  const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const [y,m,day] = d.split('-');
+  return `${parseInt(day)} ${months[parseInt(m)-1]} ${y}`;
+}
+
+function showFallbackNote(msg) {
+  let el = document.getElementById('fallbackNote');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'fallbackNote';
+    el.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--panel2);border:1px solid rgba(245,166,35,0.5);color:#f5a623;border-radius:16px;padding:28px 44px;font-size:15px;font-weight:600;z-index:999;transition:opacity .3s;white-space:nowrap;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,0.5);backdrop-filter:blur(6px);';
+    document.body.appendChild(el);
+  }
+  el.innerHTML = '<div style="font-size:32px;margin-bottom:10px;">📭</div><div>Sin datos para el período seleccionado</div><div style="font-size:12px;font-weight:400;color:var(--muted);margin-top:6px;">Intenta seleccionar otro rango de fechas</div>';
+  el.style.opacity = '1';
+  el.style.display = 'block';
+  clearTimeout(el._timer);
+  el._timer = setTimeout(() => hideFallbackNote(), 3000);
+}
+
+function hideFallbackNote() {
+  const el = document.getElementById('fallbackNote');
+  if (el) { el.style.opacity = '0'; setTimeout(() => { el.style.display = 'none'; }, 300); }
 }
 
 function applyFilter() {
@@ -521,10 +732,26 @@ function fmtDateLabel(d) {
 }
 
 // ── MAIN RENDER ───────────────────────────────────────────────
+let _noDataTimer = null;
+function closeNoData() {
+  document.getElementById('noDataMsg').classList.remove('show');
+  if (_noDataTimer) { clearTimeout(_noDataTimer); _noDataTimer = null; }
+}
+
 function render() {
   const data = getFiltered();
   const from = document.getElementById('dateFrom').value;
   const to   = document.getElementById('dateTo').value;
+
+  // Show no-data message if no records for selected range
+  const noDataEl = document.getElementById('noDataMsg');
+  if (data.length === 0) {
+    noDataEl.classList.add('show');
+    if (_noDataTimer) clearTimeout(_noDataTimer);
+    _noDataTimer = setTimeout(() => closeNoData(), 3000);
+    return;
+  }
+  noDataEl.classList.remove('show');
 
   const confirmed = data.filter(r => r.transaction_status === 'CONFIRMED');
   const cancelled = data.filter(r => r.transaction_status === 'CANCELLED');
@@ -673,6 +900,7 @@ function render() {
       <div class="bank-bar-wrap"><div class="bank-bar-fill" style="width:${(v.gross/maxBank*100).toFixed(1)}%"></div></div>
       <div class="bank-count">${v.count}</div>
       <div class="bank-amount">${fmt(v.gross)}</div>
+      <div class="bank-ticket" title="Ticket promedio">${fmt(v.count ? v.gross/v.count : 0)}</div>
     </div>`).join('');
 
   destroyChart('bankChart');
@@ -682,16 +910,18 @@ function render() {
       labels:banks.map(([n])=>n),
       datasets:[
         {label:'Txns',data:banks.map(([,v])=>v.count),backgroundColor:'rgba(99,102,241,0.45)',borderColor:'#6366f1',borderWidth:1,borderRadius:5,yAxisID:'y1'},
-        {label:'Monto',data:banks.map(([,v])=>v.gross),type:'line',borderColor:PALETTE.teal,backgroundColor:'rgba(0,194,168,0.08)',fill:true,tension:0.4,borderWidth:2,pointRadius:3,pointBackgroundColor:PALETTE.teal,yAxisID:'y'}
+        {label:'Monto',data:banks.map(([,v])=>v.gross),type:'line',borderColor:PALETTE.teal,backgroundColor:'rgba(0,194,168,0.08)',fill:true,tension:0.4,borderWidth:2,pointRadius:3,pointBackgroundColor:PALETTE.teal,yAxisID:'y'},
+        {label:'Ticket Prom.',data:banks.map(([,v])=>v.count?v.gross/v.count:0),type:'line',borderColor:PALETTE.gold,backgroundColor:'transparent',fill:false,tension:0.4,borderWidth:1.5,borderDash:[4,3],pointRadius:3,pointBackgroundColor:PALETTE.gold,yAxisID:'y2'}
       ]
     },
     options:{
       responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:11}}},tooltip:{callbacks:{label:ctx=>ctx.dataset.label==='Monto'?' Monto: '+fmt(ctx.raw):' Txns: '+ctx.raw}}},
+      plugins:{legend:{display:true,position:'top',labels:{boxWidth:10,font:{size:11}}},tooltip:{callbacks:{label:ctx=>{if(ctx.dataset.label==='Monto')return ' Monto: '+fmt(ctx.raw);if(ctx.dataset.label==='Ticket Prom.')return ' Ticket Prom.: '+fmt(ctx.raw);return ' Txns: '+ctx.raw;}}}},
       scales:{
         x:{grid:{color:PALETTE.grid},ticks:{font:{size:10},maxRotation:30}},
         y:{grid:{color:PALETTE.grid},position:'left',ticks:{callback:v=>fmt(v)}},
-        y1:{position:'right',grid:{drawOnChartArea:false},ticks:{font:{size:10}}}
+        y1:{position:'right',grid:{drawOnChartArea:false},ticks:{font:{size:10}}},
+        y2:{display:false,position:'right',grid:{drawOnChartArea:false}}
       }
     }
   });
@@ -713,6 +943,7 @@ function render() {
 
   document.getElementById('feeTable').innerHTML = feeRows.map(([k,v])=>{
     const effRate = v.count ? (v.feeSum/v.count).toFixed(2)+'%' : '—';
+    const avgTkt  = v.count ? fmt(v.gross/v.count) : '—';
     const share = pct(v.gross,totalGross);
     const barW = totalGross ? (v.gross/totalGross*100).toFixed(1) : 0;
     return `<tr>
@@ -721,6 +952,7 @@ function render() {
         <span class="td-bold">${k}</span></span></td>
       <td class="td-right">${v.count.toLocaleString('es-MX')}</td>
       <td class="td-right td-bold">${fmt2(v.gross)}</td>
+      <td class="td-right">${avgTkt}</td>
       <td class="td-right td-red">−${v.fees.toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2})}</td>
       <td class="td-right">${effRate}</td>
       <td class="td-right td-teal">${fmt2(v.net)}</td>
@@ -729,7 +961,7 @@ function render() {
   }).join('');
 
   const fTotal = feeRows.reduce((s,[,v])=>s+v.fees,0);
-  document.getElementById('feeFoot').innerHTML = `<tr class="total-row"><td>Total</td><td class="td-right">${confirmed.length.toLocaleString('es-MX')}</td><td class="td-right">${fmt2(totalGross)}</td><td class="td-right td-red">−${fTotal.toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td class="td-right">${avgFee.toFixed(2)}%</td><td class="td-right td-teal">${fmt2(totalNet)}</td><td class="td-right">100%</td></tr>`;
+  document.getElementById('feeFoot').innerHTML = `<tr class="total-row"><td>Total</td><td class="td-right">${confirmed.length.toLocaleString('es-MX')}</td><td class="td-right">${fmt2(totalGross)}</td><td class="td-right">${fmt(avgTicket)}</td><td class="td-right td-red">−${fTotal.toLocaleString('es-MX',{minimumFractionDigits:2,maximumFractionDigits:2})}</td><td class="td-right">${avgFee.toFixed(2)}%</td><td class="td-right td-teal">${fmt2(totalNet)}</td><td class="td-right">100%</td></tr>`;
 }
 
 // ── GROUPING STATE ────────────────────────────────────────────
@@ -780,9 +1012,9 @@ function renderTrendChart(confirmed_all) {
     else if (currentGrouping === 'week') key = getWeekKey(r.date);
     else key = getMonthKey(r.date);
 
-    if (!groupMap[key]) groupMap[key] = {gross:0, net:0};
+    if (!groupMap[key]) groupMap[key] = {gross:0, count:0};
     groupMap[key].gross += r.transaction_amount;
-    groupMap[key].net   += r.net_amount_to_merchant;
+    groupMap[key].count += 1;
   });
 
   const sortedKeys = Object.keys(groupMap).sort();
@@ -791,8 +1023,9 @@ function renderTrendChart(confirmed_all) {
   else if (currentGrouping === 'week') labels = sortedKeys.map(fmtWeekLabel);
   else labels = sortedKeys.map(fmtMonthLabel);
 
-  const gGross = sortedKeys.map(k => groupMap[k].gross);
-  const gNet   = sortedKeys.map(k => groupMap[k].net);
+  const gGross  = sortedKeys.map(k => groupMap[k].gross);
+  const gCount  = sortedKeys.map(k => groupMap[k].count);
+  const gTicket = sortedKeys.map(k => groupMap[k].count ? groupMap[k].gross / groupMap[k].count : 0);
 
   destroyChart('daily');
   if (!sortedKeys.length) return;
@@ -802,26 +1035,81 @@ function renderTrendChart(confirmed_all) {
     data: {
       labels,
       datasets: [
-        {label:'Bruto', data:gGross, borderColor:PALETTE.teal, backgroundColor:'rgba(0,194,168,0.08)', fill:true, tension:0.4, borderWidth:2, pointRadius:sortedKeys.length>20?0:3, pointHoverRadius:5, pointBackgroundColor:PALETTE.teal}
+        {
+          label:'Bruto', data:gGross,
+          borderColor:PALETTE.teal, backgroundColor:'rgba(0,194,168,0.08)',
+          fill:true, tension:0.4, borderWidth:2,
+          pointRadius:sortedKeys.length>20?0:3, pointHoverRadius:5,
+          pointBackgroundColor:PALETTE.teal,
+          yAxisID:'y'
+        },
+        {
+          label:'Txns', data:gCount,
+          borderColor:PALETTE.gold, backgroundColor:'transparent',
+          fill:false, tension:0.4, borderWidth:1.5, borderDash:[4,3],
+          pointRadius:0, pointHoverRadius:4,
+          yAxisID:'y1'
+        },
+        {
+          label:'Ticket Prom.', data:gTicket,
+          borderColor:PALETTE.blue, backgroundColor:'transparent',
+          fill:false, tension:0.4, borderWidth:1.5, borderDash:[2,4],
+          pointRadius:0, pointHoverRadius:4,
+          yAxisID:'y2'
+        }
       ]
     },
     options: {
       responsive:true, maintainAspectRatio:false,
       interaction:{intersect:false, mode:'index'},
       plugins:{
-        legend:{display:false},
-        tooltip:{callbacks:{label:ctx=>' '+ctx.dataset.label+': '+fmt(ctx.raw)}}
+        legend:{
+          display:true, position:'top',
+          labels:{boxWidth:10, padding:14, font:{size:11}}
+        },
+        tooltip:{
+          callbacks:{
+            label: ctx => {
+              if (ctx.dataset.label === 'Bruto')       return '  Bruto: '        + fmt(ctx.raw);
+              if (ctx.dataset.label === 'Txns')        return '  Transacciones: ' + ctx.raw.toLocaleString('es-MX');
+              if (ctx.dataset.label === 'Ticket Prom.') return '  Ticket Prom.: '  + fmt(ctx.raw);
+              return ctx.dataset.label + ': ' + ctx.raw;
+            }
+          }
+        }
       },
       scales:{
-        x:{grid:{color:PALETTE.grid}, ticks:{maxRotation:45, font:{size:10}, maxTicksLimit:14}},
-        y:{grid:{color:PALETTE.grid}, ticks:{callback:v=>fmt(v)}}
+        x:{ grid:{color:PALETTE.grid}, ticks:{maxRotation:45, font:{size:10}, maxTicksLimit:14} },
+        y:{
+          grid:{color:PALETTE.grid}, position:'left',
+          ticks:{callback:v=>fmt(v), font:{size:10}}
+        },
+        y1:{
+          display:false, position:'right',
+          grid:{drawOnChartArea:false}
+        },
+        y2:{
+          display:false, position:'right',
+          grid:{drawOnChartArea:false}
+        }
       }
     }
   });
 }
 
 
-// ── INIT ─────────────────────────────────────────────────────
+// Render immediately from embedded data, then try to fetch fresh data
+// Set date input min/max from actual data range
+const _allDates = [...new Set(RAW.map(r=>r.date).filter(d => typeof d === 'string' && d.length === 10))].sort();
+const _minDate  = _allDates[0];
+const _maxDate  = _allDates[_allDates.length-1];
+document.getElementById('dateFrom').min   = _minDate;
+document.getElementById('dateFrom').max   = _maxDate;
+document.getElementById('dateFrom').value = _minDate;
+document.getElementById('dateTo').min     = _minDate;
+document.getElementById('dateTo').max     = _maxDate;
+document.getElementById('dateTo').value   = _maxDate;
+
 lastUpdated = new Date();
 updateLastUpdatedLabel();
 render();
