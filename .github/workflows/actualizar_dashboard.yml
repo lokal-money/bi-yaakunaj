@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      GH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
 
     permissions:
       contents: write
@@ -28,6 +27,8 @@ jobs:
         run: pip install pandas openpyxl
 
       - name: Descargar TXN_LM_CP.xlsx desde datos-cp
+        env:
+          GH_TOKEN: ${{ secrets.DISPATCH_TOKEN }}
         run: |
           gh api repos/lokal-money/datos-cp/contents/TXN_LM_CP.xlsx \
             --jq '.content' | base64 -d > TXN_LM_CP.xlsx
