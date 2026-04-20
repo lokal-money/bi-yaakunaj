@@ -4,13 +4,7 @@ procesar_datos.py
 Lee TXN_LM_CP.xlsx, filtra por comercio y regenera index.html.
 
 Uso:
-    python procesar_datos.py
-    python procesar_datos.py TXN_LM_CP.xlsx "HOGAZA HOGAZA" "UTC-7"
-
-Argumentos opcionales:
-    1. Ruta al archivo Excel      (default: TXN_LM_CP.xlsx)
-    2. Nombre del comercio        (default: HOGAZA HOGAZA)
-    3. Columna de huso horario    (default: UTC-7)
+    python procesar_datos.py TXN_LM_CP.xlsx "NOMBRE COMERCIO" "UTC-X"
 """
 
 import pandas as pd
@@ -19,52 +13,44 @@ import re
 import sys
 import os
 
-# ── CONFIGURACIÓN ─────────────────────────────────────────────
 EXCEL_FILE     = "TXN_LM_CP.xlsx"
 SHEET_NAME     = "TXN Lokal Money Compago"
 OUTPUT_FILE    = "index.html"
 TEMPLATE_FILE  = "index.template.html"
-
-# Comercio y huso horario por defecto (Hogaza Hogaza — Ensenada, UTC-7)
 DEFAULT_MERCHANT = "HOGAZA HOGAZA"
-DEFAULT_TZ_COL   = "UTC-7"   # se convierte en "transaction_time (UTC-7)"
+DEFAULT_TZ_COL   = "UTC-7"
 
-# ── CLASIFICACIÓN DE TIPO DE TARJETA ─────────────────────────
 def classify_fee(fee):
     if fee <= 2.45: return "Débito"
     if fee <= 2.84: return "Crédito"
     if fee <= 2.99: return "Crédito Plus"
     return "Crédito Internacional"
 
-# ── CARGA Y TRANSFORMACIÓN ────────────────────────────────────
 def procesar_excel(path, merchant, tz_col):
     print(f"Leyendo {path}...")
     df = pd.read_excel(path, sheet_name=SHEET_NAME)
 
-    # Filtrar por comercio
     mask = df["merchant_name"].str.strip().str.upper() == merchant.strip().upper()
     df = df[mask].copy()
     if df.empty:
         available = df["merchant_name"].unique().tolist()
-        print(f"ERROR: No se encontró el comercio '{merchant}'.")
+        print(f"ERROR: No se encontro el comercio '{merchant}'.")
         print(f"Comercios disponibles: {available}")
         sys.exit(1)
     print(f"OK: {len(df)} filas para '{merchant}'")
 
-    # Columna de timestamp según huso horario
     col_name = f"transaction_time ({tz_col})"
     if col_name not in df.columns:
         tz_cols = [c for c in df.columns if c.startswith("transaction_time")]
-        print(f"ERROR: No se encontró la columna '{col_name}'.")
-        print(f"Columnas de tiempo disponibles: {tz_cols}")
+        print(f"ERROR: No se encontro la columna '{col_name}'.")
+        print(f"Columnas disponibles: {tz_cols}")
         sys.exit(1)
 
-    # Limpiar timestamps con doble Z y parsear
     df[col_name] = df[col_name].astype(str).str.replace(r"Z+$", "Z", regex=True)
     df["pt_dt"]  = pd.to_datetime(df[col_name], utc=True, errors="coerce")
     n_nat = df["pt_dt"].isna().sum()
     if n_nat > 0:
-        print(f"AVISO: {n_nat} filas con fecha no parseable — se eliminarán")
+        print(f"AVISO: {n_nat} filas con fecha no parseable — se eliminaran")
     df = df.dropna(subset=["pt_dt"])
 
     df["date"]       = df["pt_dt"].dt.strftime("%Y-%m-%d")
@@ -92,21 +78,25 @@ def procesar_excel(path, merchant, tz_col):
 
     return records, date_from, date_to
 
-# ── REGENERAR HTML ────────────────────────────────────────────
-def regenerar_html(records, date_from, date_to):
+def regenerar_html(records, date_from, date_to, merchant):
     json_data = json.dumps(records, separators=(",", ":"))
 
+    # Use template if available, otherwise use output file
     template_path = TEMPLATE_FILE if os.path.exists(TEMPLATE_FILE) else OUTPUT_FILE
     print(f"Usando plantilla: {template_path}")
 
     with open(template_path, "r", encoding="utf-8") as f:
         html = f.read()
 
-    # 1. Reemplazar bloque RAW (maneja [] vacío y [...] con datos)
+    # 1. Replace merchant name placeholder
+    html = html.replace("{{MERCHANT_NAME}}", merchant)
+    print(f"OK: Nombre del comercio: {merchant}")
+
+    # 2. Replace RAW data block
     marker = "let RAW = "
     start  = html.find(marker)
     if start == -1:
-        print("ERROR: No se encontró 'let RAW = ' en el HTML.")
+        print("ERROR: No se encontro 'let RAW = ' en el HTML.")
         sys.exit(1)
 
     bracket_open = html.index("[", start)
@@ -126,7 +116,7 @@ def regenerar_html(records, date_from, date_to):
     html = html[:start] + "let RAW = " + json_data + html[end:]
     print("OK: Datos embebidos")
 
-    # 2. Actualizar date inputs (elimina min/max hardcodeados)
+    # 3. Update date inputs
     html = re.sub(
         r'<input[^>]*id="dateFrom"[^>]*/>',
         '<input type="date" id="dateFrom" value="' + date_from + '"/>',
@@ -139,7 +129,7 @@ def regenerar_html(records, date_from, date_to):
     )
     print("OK: Fechas actualizadas")
 
-    # 3. Eliminar loadData() del bloque de init
+    # 4. Remove loadData() from init block if present
     init_pattern = re.compile(
         r'(scheduleRefresh\(\);)\s*(?://[^\n]*)?\s*loadData\(\);',
         re.MULTILINE
@@ -148,7 +138,7 @@ def regenerar_html(records, date_from, date_to):
     if n:
         print(f"OK: loadData() eliminado del init ({n} vez/veces)")
 
-    # 4. Guardar
+    # 5. Save
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(html)
 
@@ -162,16 +152,15 @@ def regenerar_html(records, date_from, date_to):
     print(f"LISTO: {OUTPUT_FILE} generado ({size_kb:.1f} KB)")
     print(f"LISTO: Periodo {fmt(date_from)} — {fmt(date_to)}")
 
-# ── MAIN ──────────────────────────────────────────────────────
 if __name__ == "__main__":
     excel_path = sys.argv[1] if len(sys.argv) > 1 else EXCEL_FILE
     merchant   = sys.argv[2] if len(sys.argv) > 2 else DEFAULT_MERCHANT
     tz_col     = sys.argv[3] if len(sys.argv) > 3 else DEFAULT_TZ_COL
 
     if not os.path.exists(excel_path):
-        print(f"ERROR: No se encontró el archivo {excel_path}")
+        print(f"ERROR: No se encontro el archivo {excel_path}")
         sys.exit(1)
 
     print(f"Comercio: {merchant} | Huso horario: {tz_col}")
     records, date_from, date_to = procesar_excel(excel_path, merchant, tz_col)
-    regenerar_html(records, date_from, date_to)
+    regenerar_html(records, date_from, date_to, merchant)
