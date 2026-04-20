@@ -28,10 +28,14 @@ jobs:
 
       - name: Descargar TXN_LM_CP.xlsx desde datos-cp
         run: |
+          DOWNLOAD_URL=$(curl -s \
+            -H "Authorization: token ${{ secrets.DISPATCH_TOKEN }}" \
+            "https://api.github.com/repos/lokal-money/datos-cp/contents/TXN_LM_CP.xlsx" \
+            | python3 -c "import sys,json; print(json.load(sys.stdin)['download_url'])")
+          echo "URL: $DOWNLOAD_URL"
           curl -L \
             -H "Authorization: token ${{ secrets.DISPATCH_TOKEN }}" \
-            -H "Accept: application/octet-stream" \
-            "https://api.github.com/repos/lokal-money/datos-cp/contents/TXN_LM_CP.xlsx" \
+            "$DOWNLOAD_URL" \
             -o TXN_LM_CP.xlsx
           file TXN_LM_CP.xlsx
           du -sh TXN_LM_CP.xlsx
